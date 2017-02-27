@@ -135,7 +135,7 @@
   import 'vue-range-slider/dist/vue-range-slider.css'
 
   export default {
-    name: 'hello',
+    name: 'animation',
     components: {
       RangeSlider
     },
@@ -183,49 +183,53 @@
 
       booStyle() {
 
-        let $n = this.colorsCount
-          , $m = this.colorsRepeat
-          , $p = this.dotsCount
-          , $d = this.diam
-          , $cutoff = this.cutOff
-          , $boxShadowInitial = ''
-          , $boxShadowTo = ''
-          , $multiply = this.multiply;
+        let n = this.colorsCount
+          , m = this.colorsRepeat
+          , p = this.dotsCount
+          , d = this.diam
+          , cutoff = this.cutOff
+          , boxShadowInitial = ''
+          , boxShadowTo = ''
+          , multiply = this.multiply;
 
-        for (let $i = 0; $i <= $n * $m; $i++) {
-          let $beta = $i * $multiply * Math.PI / ($n * $m)
-            , $x = 0
-            , $y = 0
-            , $x1 = 0
-            , $y1 = 0
-            , $x2 = 0
-            , $y2 = 0;
+        for (let i = 0, totalColors = n * m; i <= totalColors; i++) {
+          let betaAngle = i * multiply * Math.PI / totalColors
+            , colorHue = i * 360 / n
+            , x = 0
+            , y = 0
+            , xFrom = 0
+            , yFrom = 0
+            , xTo = 0
+            , yto = 0;
 
-          for (let $j = 1; $j <= $p; $j++) {
-            let $gamma = $j * $multiply * Math.PI / $p
-              , $s = this.scaleFactor
-              * ($cutoff * $p - $j)
-              * ($j - (this.cutOffShift + $cutoff / this.cutOffFactor) * $p)
-              / Math.pow((0.5 + $cutoff) * $p, $multiply);
+          for (let j = 1; j <= p; j++) {
+            let gammaAngle = j * multiply * Math.PI / p
+              , s = this.scaleFactor
+              * (cutoff * p - j)
+              * (j - (this.cutOffShift + cutoff / this.cutOffFactor) * p)
+              / Math.pow((0.5 + cutoff) * p, multiply);
 
-            if ($j < $cutoff * $p) {
-              $s = 0;
+            if (j < cutoff * p) {
+              s = 0;
             }
 
-            $x = $x + 1.65 * ($s + 1) * $d;
-            $y = $x * Math.sin($gamma) / 5;
-            $x1 = $x * Math.cos($beta) - $y * Math.sin($beta);
-            $y1 = $x * Math.sin($beta) + $y * Math.cos($beta);
-            $x2 = $x * Math.cos($beta + $gamma);
-            $y2 = $x * Math.sin($beta + $gamma);
-            if ($boxShadowInitial.length > 0) {
-              $boxShadowInitial += ', ';
+            x = x + 1.65 * (s + 1) * d;
+            y = x * Math.sin(gammaAngle) / 5;
+
+            xFrom = x * Math.cos(betaAngle) - y * Math.sin(betaAngle);
+            yFrom = x * Math.sin(betaAngle) + y * Math.cos(betaAngle);
+
+            if (boxShadowInitial.length > 0) {
+              boxShadowInitial += ', ';
             }
-            if ($boxShadowTo.length > 0) {
-              $boxShadowTo += ', ';
+            boxShadowInitial += `${xFrom}em ${yFrom}em 0 ${s * d}em hsl(${colorHue}, 100%, 50%)`;
+
+            xTo = x * Math.cos(betaAngle + gammaAngle);
+            yto = x * Math.sin(betaAngle + gammaAngle);
+            if (boxShadowTo.length > 0) {
+              boxShadowTo += ', ';
             }
-            $boxShadowInitial += `${$x1}em ${$y1}em 0 ${$s * $d}em hsl(${$i * 360 / $n}, 100%, 50%)`;
-            $boxShadowTo += `${$x2}em ${$y2}em 0 ${$d / $multiply}em hsl(${$i * 360 / $n}, 100%, 50%)`;
+            boxShadowTo += `${xTo}em ${yto}em 0 ${d / multiply}em hsl(${colorHue}, 100%, 50%)`;
           }
         }
 
@@ -236,17 +240,17 @@
         style.innerHTML = `
         @keyframes ani {
           to {
-            box-shadow: ${$boxShadowTo};
+            box-shadow: ${boxShadowTo};
           }
         }`;
         document.getElementsByTagName('head')[0].appendChild(style);
 
 
         return {
-          'margin': -$d / 2 + 'em',
-          'width': $d + 'em',
-          'height': $d + 'em',
-          'box-shadow': $boxShadowInitial,
+          'margin': -d / 2 + 'em',
+          'width': d + 'em',
+          'height': d + 'em',
+          'box-shadow': boxShadowInitial,
           'position': 'absolute',
           'top': '50%',
           'left': '50%',
