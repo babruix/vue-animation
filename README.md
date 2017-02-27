@@ -1,6 +1,8 @@
 # vueapp01
 
-> A Vue.js project
+> A Vue.js controlled animation
+
+Demo: https://github.com/babruix/vue-animation
 
 ## Build Setup
 
