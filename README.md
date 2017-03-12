@@ -1,8 +1,8 @@
-# vueapp01
+# Visualization experiment
 
 > A Vue.js controlled animation
 
-Demo: https://github.com/babruix/vue-animation
+Demo: https://babruix.github.io/vue-animation/
 
 ## Build Setup
 
